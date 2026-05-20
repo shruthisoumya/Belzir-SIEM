@@ -1,0 +1,1 @@
+export const API_URL = process.env.REACT_APP_API_URL || "http://10.0.3.83:5000";

@@ -1,0 +1,153 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= DARK MODE ================= */
+
+.dark-mode {
+  background-color: #0b0f19;
+  color: #ffffff;
+}
+
+/* Sidebar */
+.dark-mode .sidebar {
+  background-color: #0b0f19;
+  border-right: 1px solid #1f2937;
+}
+
+/* Main content */
+.dark-mode .main-content {
+  background-color: #0b0f19;
+}
+
+/* Table container */
+.dark-mode .user-table {
+  background-color: #111827;
+}
+
+/* Table */
+.dark-mode table {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+/* Table header */
+.dark-mode th {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+/* Table rows */
+.dark-mode td {
+  border-bottom: 1px solid #374151;
+}
+
+/* Hover */
+.dark-mode tr:hover {
+  background-color: #1f2937;
+}
+
+/* Buttons */
+.dark-mode .add-user-btn {
+  background: #3b82f6; /* blue like your screenshot */
+}
+
+/* Icons */
+.dark-mode .icon {
+  color: #ffffff;
+}
+.dark-mode .icon {
+  color: #fff;
+}
+
+.dark-mode {
+  background-color: #0b0f19;
+  color: #ffffff;
+}
+
+/* Sidebar */
+.dark-mode .sidebar {
+  background-color: #0b0f19;
+}
+
+/* Icons */
+.dark-mode .icon {
+  color: #ffffff;
+}
+
+.dark-mode .icon {
+  color: #ffffff;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}
+/* Fix Dashboard text in dark mode */
+.dark-mode .dashboard-item span {
+  color: #ffffff !important;
+}
+.dark-mode .sidebar span {
+  color: #ffffff;
+}
+
+/* Fix headings in dark mode */
+.dark-mode h2 {
+  color: #ffffff;
+}
+
+.dark-mode {
+  color: #ffffff;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 10px;
+}

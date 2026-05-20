@@ -1,0 +1,30 @@
+/* Fix table when drawer opens */
+.incidents-layout.drawer-open .table-header,
+.incidents-layout.drawer-open .table-row {
+  grid-template-columns: 120px 120px 80px 1fr;
+}
+
+/* Critical badge */
+.sev.critical {
+  background: #ffe4e6;
+  color: #ef4444;
+}
+
+/* Open status */
+.status.open {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+/* Better drawer height like screenshot */
+.incident-drawer {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+/* Make row cleaner */
+.table-row:hover {
+  background: #f8fafc;
+}

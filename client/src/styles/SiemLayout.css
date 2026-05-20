@@ -1,0 +1,84 @@
+.siem-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.siem-leftbar {
+  width: 260px;
+  background: #082343;
+  color: #90a3bd;
+  padding-top: 70px;
+  flex-shrink: 0;
+}
+
+.siem-section {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #a3b4ca;
+  font-weight: 800;
+  margin: 20px 20px 10px;
+}
+
+.siem-nav {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.siem-nav span:first-child {
+  width: 20px;
+}
+
+.siem-nav.active {
+  background: #ffffff;
+  color: #172033;
+}
+
+.siem-nav b {
+  margin-left: auto;
+  background: #7c83ff;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.siem-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.siem-topbar {
+  height: 64px;
+  background: #092448;
+  border-bottom: 3px solid #b8c7d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 26px;
+  color: white;
+}
+
+.siem-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.siem-topbar-right select,
+.siem-topbar-right button {
+  background: #0d315f;
+  color: white;
+  border: 1px solid #46678d;
+  border-radius: 5px;
+  padding: 7px 12px;
+}

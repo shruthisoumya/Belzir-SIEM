@@ -1,0 +1,183 @@
+/* =========================
+   OVERLAY
+========================= */
+.view-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+/* =========================
+   CARD
+========================= */
+.view-card {
+  width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+
+  box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+}
+
+/* =========================
+   HEADER
+========================= */
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close {
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close:hover {
+  transform: rotate(90deg);
+}
+
+/* =========================
+   USER TITLE
+========================= */
+.user-name {
+  margin-top: 16px;
+}
+
+.user-name h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.role {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =========================
+   DETAILS SECTION
+========================= */
+.details {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Each row */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #f9fafb;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+/* Label */
+.detail-row span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Value */
+.detail-row p {
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.view-footer {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* BUTTON */
+.close-btn {
+  background: #2d0c57;
+  color: white;
+  border: none;
+
+  padding: 10px 16px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 🌙 DARK MODE FIX FOR VIEW MODAL */
+body.dark-mode .view-card {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode .view-header h2 {
+  color: #ffffff;
+}
+
+body.dark-mode .detail-row span {
+  color: #bbbbbb; /* labels (Email, Role) */
+}
+
+body.dark-mode .detail-row p,
+body.dark-mode .detail-row h3 {
+  color: #ffffff; /* actual data */
+}
+
+body.dark-mode .close {
+  color: #ffffff;
+}
+
+body.dark-mode .close-btn {
+  background: #333;
+  color: #fff;
+}
+
+body.dark-mode .close-btn:hover {
+  background: #4f46e5;
+}
+body.dark-mode .view-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}

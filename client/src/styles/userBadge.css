@@ -1,0 +1,28 @@
+/* src/styles/userBadge.css */
+.current-user-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* push to right */
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.current-user-right .username {
+  font-weight: 500;
+  color: #0b5ea8;
+}
+
+.current-user-right .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #0b5ea8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}

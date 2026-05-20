@@ -1,0 +1,151 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-card.center {
+  text-align: center;
+}
+
+.modal-card input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.primary {
+  background: #1976d2;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.full {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.qr {
+  width: 180px;
+  margin: 15px auto;
+}
+
+.manual-code {
+  background: #f5f5f5;
+  padding: 10px;
+  font-family: monospace;
+  margin-top: 10px;
+}
+
+.hint {
+  font-size: 12px;
+  color: #666;
+}
+
+.sub {
+  font-size: 13px;
+  color: #777;
+}
+
+/* 🔥 INPUT WITH ICON */
+.input-group {
+  position: relative;
+  margin-top: 15px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* 👁️ Eye icon inside */
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}
+
+/* ❌ Error text */
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+/* QR code */
+.qr {
+  width: 180px;
+  height: 180px;
+  margin: 10px 0;
+}
+
+/* Manual code container */
+.manual-code {
+  background-color: #f4f4f4;
+  padding: 8px 12px;
+  margin: 10px 0 20px 0;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 16px;
+  text-align: center;
+  word-break: break-all;   /* 🔹 ensures long codes wrap */
+  max-width: 100%;          /* 🔹 fits container */
+  overflow-wrap: break-word; /* 🔹 extra safety */
+  box-sizing: border-box;   /* 🔹 ensures padding doesn’t overflow */
+}
+
+/* Buttons full width */
+button.full {
+  width: 100%;
+}
+
+/* Modal card adjustments */
+.modal-card {
+  max-width: 360px; /* 🔹 restrict width so everything fits */
+  width: 90%;
+  padding: 20px;
+  box-sizing: border-box;
+}

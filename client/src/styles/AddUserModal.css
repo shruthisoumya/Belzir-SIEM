@@ -1,0 +1,165 @@
+/* =========================
+   OVERLAY
+========================= */
+.add-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+/* =========================
+   MODAL BOX
+========================= */
+.add-modal {
+  width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+
+  box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+}
+
+/* =========================
+   HEADER
+========================= */
+.add-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close {
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close:hover {
+  transform: rotate(90deg);
+}
+
+/* =========================
+   FORM
+========================= */
+.add-body {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Form group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #555;
+}
+
+/* Inputs */
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79,70,229,0.15);
+}
+
+/* Row (Role + Company) */
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* =========================
+   FOOTER BUTTONS
+========================= */
+.add-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #f3f4f6;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Create */
+.create-btn {
+  background: #2d0c57;
+  color: #fff;
+  border: none;
+
+  padding: 10px 16px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+.create-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

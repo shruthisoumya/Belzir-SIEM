@@ -1,0 +1,127 @@
+.closedloop-page {
+  min-height: 100vh;
+  padding: 34px 40px;
+  background: #f4f7fb;
+  color: #17233a;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.closedloop-loop-card {
+  background: #ffffff;
+  border: 1px solid #e3e9f2;
+  border-radius: 14px;
+  min-height: 210px;
+  padding: 30px 34px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  margin-bottom: 24px;
+}
+
+.closedloop-loop-card h2 {
+  margin: 0 0 36px;
+  text-align: center;
+  color: #9aa6b7;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.loop-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.loop-step {
+  min-width: 92px;
+  text-align: center;
+}
+
+.loop-icon {
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.loop-step strong {
+  display: block;
+  font-size: 14px;
+  color: #718096;
+  font-weight: 900;
+}
+
+.loop-step span {
+  display: block;
+  margin-top: 4px;
+  color: #a1acba;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.loop-arrow {
+  color: #cbd5e1;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.closedloop-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.closedloop-metric-card {
+  background: #ffffff;
+  border: 1px solid #e3e9f2;
+  border-radius: 14px;
+  min-height: 118px;
+  padding: 26px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.closedloop-metric-card h3 {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.closedloop-metric-card p {
+  margin: 10px 0 0;
+  color: #8b98aa;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.closedloop-metric-card.yellow h3 {
+  color: #f2c400;
+}
+
+.closedloop-metric-card.dark h3 {
+  color: #162235;
+}
+
+.closedloop-metric-card.blue h3 {
+  color: #8b8df7;
+}
+
+@media (max-width: 1000px) {
+  .closedloop-page {
+    padding: 24px 18px;
+  }
+
+  .closedloop-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .loop-flow {
+    gap: 10px;
+  }
+
+  .loop-arrow {
+    display: none;
+  }
+}

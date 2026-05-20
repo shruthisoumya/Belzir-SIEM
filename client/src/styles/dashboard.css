@@ -1,0 +1,81 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.add-user-btn {
+  background: #2d0c57;
+  color: #fff;
+  border: none;
+  height: 44px;
+  padding: 0 30px;
+  border-radius: 8px;
+  display: inline-flex;   /* 🔥 important */
+  align-items: center;
+  gap: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: auto;  
+  white-space: 50px;          /* 🔥 fix full width */
+}
+.add-user-btn:hover {
+  background: #3b0f70;
+}
+
+/* UserTable container */
+.user-table {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.btn-icon {
+  font-size: 14px;
+}
+
+.add-user-btn {
+  gap: 8px;
+  font-size: 14px;
+}
+.main-content {
+  margin-left: 240px;   /* 👈 space for sidebar */
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar-section {
+  width: 250px;
+  background: #2d2f36;
+  color: white;
+}
+
+/* Main Content */
+.main-section {
+  flex: 1;
+  padding: 20px;
+  background: #f5f7fb;
+  overflow-y: auto;
+}

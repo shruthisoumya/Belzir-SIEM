@@ -1,0 +1,98 @@
+/* Sidebar Layout */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 🔥 key */
+  padding: 20px 10px;
+}
+
+/* Top menu */
+.sidebar-top {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: #333;
+}
+
+/* System Users Button (Purple) */
+.system-users-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2d0c57;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+/* Bottom Icons (Horizontal) */
+.sidebar-icons {
+  display: flex;              /* 🔥 horizontal */
+  justify-content: space-around;
+  align-items: center;
+}
+
+.sidebar-icons .icon {
+  font-size: 18px;
+  color: #444;
+  cursor: pointer;
+}
+
+.sidebar-icons .icon:hover {
+  color: #2d0c57;
+}
+
+/* Dashboard styling */
+.dashboard-item span {
+  color: #000;
+  font-weight: 700; /* bold */
+}
+
+.dashboard-item .icon {
+  color: #000;
+  font-weight: 700;
+}
+.dashboard-item {
+  font-weight: 700;
+}
+/* Thin divider line */
+.divider {
+  width: 100%;
+  height: 0.1px;              /* very thin */
+  background-color: #e6e3e3;   /* black line */
+  margin: 12px 0;           /* spacing */
+}
+.sidebar-icons .icon {
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;      /* 👈 FIXED SIDEBAR */
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  z-index: 1000;        /* 👈 VERY IMPORTANT */
+  background-color: #fff;
+}
+body.dark-mode {
+  background-color: #111827;
+  color: #fff;
+}
+.logo img {
+  width: 140px;
+  transition: all 0.3s ease;
+}
