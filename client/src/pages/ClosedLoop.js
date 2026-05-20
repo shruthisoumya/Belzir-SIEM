@@ -26,49 +26,55 @@ export default function ClosedLoop() {
 
   const percent = (value) => `${Math.round(safeNumber(value) * 100)}%`;
 
-  useEffect(() => {
-    let cancelled = false;
+useEffect(() => {
+  let cancelled = false;
 
-    async function loadClosedLoop() {
-      try {
-        setLoading(true);
+  async function loadClosedLoop() {
+    try {
+      setLoading(true);
 
-        const [patternsRes, alertsRes, incidentsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=50`),
-          fetch(`${API_BASE}/api/wazuh/analyst-queue?limit=50`),
-          fetch(`${API_BASE}/api/incidents?limit=5`),
-        ]);
+      const [patternsRes, alertsRes, incidentsRes] = await Promise.allSettled([
+        fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=20`),
+        fetch(`${API_BASE}/api/wazuh/analyst-queue?limit=20`),
+        fetch(`${API_BASE}/api/incidents?limit=5`),
+      ]);
 
-        const [patternsData, alertsData, incidentsData] = await Promise.all([
-          patternsRes.json(),
-          alertsRes.json(),
-          incidentsRes.json(),
-        ]);
+      const patternsData =
+        patternsRes.status === "fulfilled" ? await patternsRes.value.json() : {};
 
-        if (cancelled) return;
+      const alertsData =
+        alertsRes.status === "fulfilled" ? await alertsRes.value.json() : {};
 
-        setPatterns(getArray(patternsData));
-        setAlerts(getArray(alertsData));
-        setIncidents(getArray(incidentsData));
-      } catch (err) {
-        console.error("Closed Loop fetch error:", err);
+      const incidentsData =
+        incidentsRes.status === "fulfilled" ? await incidentsRes.value.json() : {};
+
+      if (cancelled) return;
+
+      setPatterns(getArray(patternsData));
+      setAlerts(getArray(alertsData));
+      setIncidents(getArray(incidentsData));
+    } catch (err) {
+      console.error("Closed Loop fetch error:", err);
+
+      if (!cancelled) {
         setPatterns([]);
         setAlerts([]);
         setIncidents([]);
-      } finally {
-        if (!cancelled) setLoading(false);
       }
+    } finally {
+      if (!cancelled) setLoading(false);
     }
+  }
 
-    loadClosedLoop();
+  loadClosedLoop();
 
-    const interval = setInterval(loadClosedLoop, 120000);
+  const interval = setInterval(loadClosedLoop, 120000);
 
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, []);
+  return () => {
+    cancelled = true;
+    clearInterval(interval);
+  };
+}, []);
 
   const rows = useMemo(() => {
     return patterns.map((pattern) => {

@@ -8,6 +8,7 @@ export default function Metrics() {
   const [alerts, setAlerts] = useState([]);
   const [incidents, setIncidents] = useState([]);
   const [patterns, setPatterns] = useState([]);
+  const [cacheStats, setCacheStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const getArray = (payload) => {
@@ -23,6 +24,13 @@ export default function Metrics() {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
   };
+
+  const formatNumber = (value) => {
+    const number = safeNumber(value, 0);
+    return number.toLocaleString("en-GB");
+  };
+
+  const formatPercent = (value) => `${safeNumber(value, 0)}%`;
 
   const minutesBetween = (start, end) => {
     const a = new Date(start || 0).getTime();
@@ -79,16 +87,18 @@ export default function Metrics() {
       try {
         setLoading(true);
 
-        const [alertsRes, incidentsRes, patternsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/wazuh/mitre-lite?limit=500`),
-          fetch(`${API_BASE}/api/incidents?limit=300`),
-          fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=500`),
+        const [alertsRes, incidentsRes, patternsRes, cacheRes] = await Promise.all([
+          fetch(`${API_BASE}/api/wazuh/mitre-lite?limit=50`),
+          fetch(`${API_BASE}/api/incidents?limit=50`),
+          fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=50`),
+          fetch(`${API_BASE}/api/wazuh/claude-cache-stats`),
         ]);
 
-        const [alertsData, incidentsData, patternsData] = await Promise.all([
+        const [alertsData, incidentsData, patternsData, cacheData] = await Promise.all([
           alertsRes.json(),
           incidentsRes.json(),
           patternsRes.json(),
+          cacheRes.json(),
         ]);
 
         if (cancelled) return;
@@ -96,11 +106,13 @@ export default function Metrics() {
         setAlerts(getArray(alertsData));
         setIncidents(getArray(incidentsData));
         setPatterns(getArray(patternsData));
+        setCacheStats(cacheData?.data || cacheData || null);
       } catch (err) {
         console.error("Metrics fetch error:", err);
         setAlerts([]);
         setIncidents([]);
         setPatterns([]);
+        setCacheStats(null);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -108,7 +120,7 @@ export default function Metrics() {
 
     loadMetrics();
 
-    const interval = setInterval(loadMetrics, 180000);
+    const interval = setInterval(loadMetrics, 60000);
 
     return () => {
       cancelled = true;
@@ -200,9 +212,9 @@ export default function Metrics() {
       }
 
       row.totalActions +=
-        safeNumber(incident.timeline?.length) +
-        safeNumber(incident.soarActions?.length) +
-        safeNumber(incident.playbooks?.length);
+        safeNumber(incident.timelineCount) +
+        safeNumber(incident.playbookCount) +
+        safeNumber(incident.evidenceCount);
     });
 
     return Array.from(map.values()).sort(
@@ -261,6 +273,23 @@ export default function Metrics() {
     };
   }, [thirtyDayIncidents]);
 
+  const cache = {
+    totalRequests: safeNumber(cacheStats?.totalRequests),
+    claudeRequests: safeNumber(cacheStats?.claudeRequests),
+    fallbackRequests: safeNumber(cacheStats?.fallbackRequests),
+    rateLimitedFallbacks: safeNumber(cacheStats?.rateLimitedFallbacks),
+    cacheHits: safeNumber(cacheStats?.cacheHits),
+    cacheMisses: safeNumber(cacheStats?.cacheMisses),
+    cacheHitRate: safeNumber(cacheStats?.cacheHitRate),
+    cacheMissRate: safeNumber(cacheStats?.cacheMissRate),
+    inputTokens: safeNumber(cacheStats?.inputTokens),
+    outputTokens: safeNumber(cacheStats?.outputTokens),
+    cacheReadInputTokens: safeNumber(cacheStats?.cacheReadInputTokens),
+    cacheCreationInputTokens: safeNumber(cacheStats?.cacheCreationInputTokens),
+    totalTokens: safeNumber(cacheStats?.totalTokens),
+    lastUpdated: cacheStats?.lastUpdated || "-",
+  };
+
   return (
     <SiemLayout>
       <div className="metrics-page">
@@ -308,6 +337,55 @@ export default function Metrics() {
             <p>30-day total</p>
           </div>
         </div>
+
+        <section className="metrics-table-section">
+          <h2>Claude Cache Diagnostics</h2>
+
+          <div className="metrics-grid cache-grid">
+            <div className="metrics-card green">
+              <h2>{loading ? "..." : formatPercent(cache.cacheHitRate)}</h2>
+              <strong>Cache Hit Rate</strong>
+              <p>{formatNumber(cache.cacheHits)} hits / {formatNumber(cache.cacheMisses)} misses</p>
+            </div>
+
+            <div className="metrics-card blue">
+              <h2>{loading ? "..." : formatNumber(cache.claudeRequests)}</h2>
+              <strong>Claude Requests</strong>
+              <p>Total Claude API calls tracked</p>
+            </div>
+
+            <div className="metrics-card purple">
+              <h2>{loading ? "..." : formatNumber(cache.cacheReadInputTokens)}</h2>
+              <strong>Cache Read Tokens</strong>
+              <p>Tokens reused from Claude cache</p>
+            </div>
+
+            <div className="metrics-card yellow">
+              <h2>{loading ? "..." : formatNumber(cache.totalTokens)}</h2>
+              <strong>Total Tokens</strong>
+              <p>Input + output + cache tokens</p>
+            </div>
+
+            <div className="metrics-card muted">
+              <h2>{loading ? "..." : formatNumber(cache.fallbackRequests)}</h2>
+              <strong>Fallbacks</strong>
+              <p>Local fallback AI decisions</p>
+            </div>
+
+            <div className="metrics-card red">
+              <h2>{loading ? "..." : formatNumber(cache.rateLimitedFallbacks)}</h2>
+              <strong>Rate Limits</strong>
+              <p>Claude rate-limit fallbacks</p>
+            </div>
+          </div>
+
+          <div className="cache-details">
+            <span>Input Tokens: {formatNumber(cache.inputTokens)}</span>
+            <span>Output Tokens: {formatNumber(cache.outputTokens)}</span>
+            <span>Cache Created Tokens: {formatNumber(cache.cacheCreationInputTokens)}</span>
+            <span>Last Updated: {cache.lastUpdated === "-" ? "-" : new Date(cache.lastUpdated).toLocaleString("en-GB")}</span>
+          </div>
+        </section>
 
         <section className="metrics-table-section">
           <h2>By Severity</h2>

@@ -11,6 +11,97 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function getClaudeStatsStore() {
+  global.belzirClaudeCacheStats = global.belzirClaudeCacheStats || {
+    enabled: true,
+    totalRequests: 0,
+    claudeRequests: 0,
+    fallbackRequests: 0,
+    rateLimitedFallbacks: 0,
+    cacheHits: 0,
+    cacheMisses: 0,
+    inputTokens: 0,
+    outputTokens: 0,
+    cacheCreationInputTokens: 0,
+    cacheReadInputTokens: 0,
+    lastUsage: null,
+    lastUpdated: null,
+  };
+
+  return global.belzirClaudeCacheStats;
+}
+
+function trackClaudeUsage(usage = {}) {
+  const stats = getClaudeStatsStore();
+
+  const inputTokens = Number(usage.input_tokens || 0);
+  const outputTokens = Number(usage.output_tokens || 0);
+  const cacheCreationInputTokens = Number(usage.cache_creation_input_tokens || 0);
+  const cacheReadInputTokens = Number(usage.cache_read_input_tokens || 0);
+
+  stats.totalRequests += 1;
+  stats.claudeRequests += 1;
+  stats.inputTokens += inputTokens;
+  stats.outputTokens += outputTokens;
+  stats.cacheCreationInputTokens += cacheCreationInputTokens;
+  stats.cacheReadInputTokens += cacheReadInputTokens;
+
+  if (cacheReadInputTokens > 0) {
+    stats.cacheHits += 1;
+  } else {
+    stats.cacheMisses += 1;
+  }
+
+  stats.lastUsage = {
+    input_tokens: inputTokens,
+    output_tokens: outputTokens,
+    cache_creation_input_tokens: cacheCreationInputTokens,
+    cache_read_input_tokens: cacheReadInputTokens,
+  };
+
+  stats.lastUpdated = new Date().toISOString();
+
+  return stats;
+}
+
+function trackFallbackUsage({ rateLimited = false } = {}) {
+  const stats = getClaudeStatsStore();
+
+  stats.totalRequests += 1;
+  stats.fallbackRequests += 1;
+
+  if (rateLimited) {
+    stats.rateLimitedFallbacks += 1;
+  }
+
+  stats.lastUpdated = new Date().toISOString();
+
+  return stats;
+}
+
+function getClaudeCacheStats() {
+  const stats = getClaudeStatsStore();
+
+  const cacheableRequests = stats.cacheHits + stats.cacheMisses;
+
+  return {
+    ...stats,
+    cacheHitRate:
+      cacheableRequests > 0
+        ? Number(((stats.cacheHits / cacheableRequests) * 100).toFixed(2))
+        : 0,
+    cacheMissRate:
+      cacheableRequests > 0
+        ? Number(((stats.cacheMisses / cacheableRequests) * 100).toFixed(2))
+        : 0,
+    totalTokens:
+      Number(stats.inputTokens || 0) +
+      Number(stats.outputTokens || 0) +
+      Number(stats.cacheCreationInputTokens || 0) +
+      Number(stats.cacheReadInputTokens || 0),
+  };
+}
+
 const SOC_CACHE_PADDING = Array(120)
   .fill(
     `
@@ -334,6 +425,10 @@ function lightweightFallback({
     risk = Math.max(risk, 80);
   }
 
+  const rateLimited = reason.toLowerCase().includes("rate limit");
+
+  trackFallbackUsage({ rateLimited });
+
   return {
     verdict,
     confidence,
@@ -357,10 +452,10 @@ function lightweightFallback({
     fp_rate: 0,
     tp_count: 0,
     asset_criticality: "MEDIUM",
-    ai_provider: isRateLimitError({ message: reason }) ? "rate-limit-fallback" : "fallback",
+    ai_provider: rateLimited ? "rate-limit-fallback" : "fallback",
     ai_model: "local-heuristic",
     cache_control_enabled: false,
-    claude_rate_limited: reason.toLowerCase().includes("rate limit"),
+    claude_rate_limited: rateLimited,
     pattern_key: `${safeString(alert.ruleDescription || "unknown-rule")}-${safeString(
       alert.agentName || "unknown-agent"
     )}`
@@ -460,12 +555,16 @@ Alert:
     });
 
     const usage = response.usage || {};
+    const stats = trackClaudeUsage(usage);
 
     console.log("Claude cache usage:", {
       input_tokens: usage.input_tokens || 0,
       output_tokens: usage.output_tokens || 0,
       cache_creation_input_tokens: usage.cache_creation_input_tokens || 0,
       cache_read_input_tokens: usage.cache_read_input_tokens || 0,
+      cache_hits: stats.cacheHits,
+      cache_misses: stats.cacheMisses,
+      cache_hit_rate: getClaudeCacheStats().cacheHitRate,
     });
 
     const text =
@@ -510,6 +609,9 @@ Alert:
         output_tokens: usage.output_tokens || 0,
         cache_creation_input_tokens: usage.cache_creation_input_tokens || 0,
         cache_read_input_tokens: usage.cache_read_input_tokens || 0,
+        cache_hits: stats.cacheHits,
+        cache_misses: stats.cacheMisses,
+        cache_hit_rate: getClaudeCacheStats().cacheHitRate,
       },
       pattern_key: `${safeString(ruleDescription)}-${safeString(agentName)}-${safeString(
         processName
@@ -543,4 +645,5 @@ Alert:
 
 module.exports = {
   analyzeAlertWithClaude,
+  getClaudeCacheStats,
 };

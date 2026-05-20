@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const { getClaudeCacheStats } = require("../services/claudeService");
 const WazuhAlert = require("../models/WazuhAlert");
 const AnalystDecision = require("../models/AnalystDecision");
 const AlertPattern = require("../models/AlertPattern");
@@ -1879,6 +1879,22 @@ router.get("/vulnerabilities", async (req, res) => {
     return res.status(500).json({
       error: "Failed vulnerabilities",
       details: err.message,
+    });
+  }
+});
+
+router.get("/claude-cache-stats", async (req, res) => {
+  try {
+    return res.json({
+      ok: true,
+      data: getClaudeCacheStats(),
+    });
+  } catch (err) {
+    console.error("claude-cache-stats:", err);
+
+    return res.status(500).json({
+      ok: false,
+      error: err.message,
     });
   }
 });

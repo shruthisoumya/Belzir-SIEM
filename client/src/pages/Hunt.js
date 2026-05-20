@@ -140,46 +140,55 @@ export default function Hunt() {
     return true;
   };
 
-  useEffect(() => {
-    let cancelled = false;
+useEffect(() => {
+  let cancelled = false;
 
-    async function loadHuntData() {
-      try {
-        setLoading(true);
+  async function loadHuntData() {
+    try {
+      setLoading(true);
 
-        const [alertsRes, incidentsRes, patternsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/wazuh/analyst-queue?limit=50`),
-          fetch(`${API_BASE}/api/incidents?limit=5`),
-          fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=50`),
-        ]);
+      const [alertsRes, incidentsRes, patternsRes] = await Promise.allSettled([
+        fetch(`${API_BASE}/api/wazuh/analyst-queue?limit=20`),
+        fetch(`${API_BASE}/api/incidents?limit=5`),
+        fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=20`),
+      ]);
 
-        const [alertsData, incidentsData, patternsData] = await Promise.all([
-          alertsRes.json(),
-          incidentsRes.json(),
-          patternsRes.json(),
-        ]);
+      const alertsData =
+        alertsRes.status === "fulfilled" ? await alertsRes.value.json() : {};
 
-        if (cancelled) return;
+      const incidentsData =
+        incidentsRes.status === "fulfilled" ? await incidentsRes.value.json() : {};
 
-        setAlerts(getArray(alertsData));
-        setIncidents(getArray(incidentsData));
-        setPatterns(getArray(patternsData));
-      } catch (err) {
-        console.error("Hunt fetch error:", err);
-      } finally {
-        if (!cancelled) setLoading(false);
+      const patternsData =
+        patternsRes.status === "fulfilled" ? await patternsRes.value.json() : {};
+
+      if (cancelled) return;
+
+      setAlerts(getArray(alertsData));
+      setIncidents(getArray(incidentsData));
+      setPatterns(getArray(patternsData));
+    } catch (err) {
+      console.error("Hunt fetch error:", err);
+
+      if (!cancelled) {
+        setAlerts([]);
+        setIncidents([]);
+        setPatterns([]);
       }
+    } finally {
+      if (!cancelled) setLoading(false);
     }
+  }
 
-    loadHuntData();
+  loadHuntData();
 
-    const interval = setInterval(loadHuntData, 120000);
+  const interval = setInterval(loadHuntData, 120000);
 
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, []);
+  return () => {
+    cancelled = true;
+    clearInterval(interval);
+  };
+}, []);
 
   const extractIncidentEvidence = (incident) => {
     if (Array.isArray(incident.evidence)) return incident.evidence;

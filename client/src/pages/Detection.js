@@ -223,45 +223,77 @@ export default function Detection() {
     };
   };
 
-  useEffect(() => {
-    let cancelled = false;
+ useEffect(() => {
+  let cancelled = false;
 
-    async function loadDetectionData() {
-      try {
-        setLoading(true);
+  async function loadDetectionData() {
+    try {
+      setLoading(true);
 
-        const [patternsRes, alertsRes, incidentsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/wazuh/alert-patterns?limit=50`),
-          fetch(`${API_BASE}/api/wazuh/analyst-queue?limit=50`),
-          fetch(`${API_BASE}/api/incidents?limit=10`),
+      const controller = new AbortController();
+
+      const [patternsRes, alertsRes, incidentsRes] =
+        await Promise.allSettled([
+          fetch(
+            `${API_BASE}/api/wazuh/alert-patterns?limit=20`,
+            { signal: controller.signal }
+          ),
+          fetch(
+            `${API_BASE}/api/wazuh/analyst-queue?limit=20`,
+            { signal: controller.signal }
+          ),
+          fetch(
+            `${API_BASE}/api/incidents?limit=5`,
+            { signal: controller.signal }
+          ),
         ]);
 
-        const [patternsData, alertsData, incidentsData] = await Promise.all([
-          patternsRes.json(),
-          alertsRes.json(),
-          incidentsRes.json(),
-        ]);
+      const patternsData =
+        patternsRes.status === "fulfilled"
+          ? await patternsRes.value.json()
+          : {};
 
-        if (cancelled) return;
+      const alertsData =
+        alertsRes.status === "fulfilled"
+          ? await alertsRes.value.json()
+          : {};
 
-        setPatterns(getPayloadArray(patternsData));
-        setAlerts(getPayloadArray(alertsData));
-        setIncidents(getPayloadArray(incidentsData));
-      } catch (err) {
-        console.error("Detection fetch error:", err);
-      } finally {
-        if (!cancelled) setLoading(false);
+      const incidentsData =
+        incidentsRes.status === "fulfilled"
+          ? await incidentsRes.value.json()
+          : {};
+
+      if (cancelled) return;
+
+      setPatterns(getPayloadArray(patternsData));
+      setAlerts(getPayloadArray(alertsData));
+      setIncidents(getPayloadArray(incidentsData));
+
+    } catch (err) {
+      console.error("Detection fetch error:", err);
+
+      if (!cancelled) {
+        setPatterns([]);
+        setAlerts([]);
+        setIncidents([]);
       }
+    } finally {
+      if (!cancelled) setLoading(false);
     }
+  }
 
-    loadDetectionData();
-    const interval = setInterval(loadDetectionData, 60000);
+  loadDetectionData();
 
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, []);
+  const interval = setInterval(
+    loadDetectionData,
+    120000
+  );
+
+  return () => {
+    cancelled = true;
+    clearInterval(interval);
+  };
+}, []);
 
   const detectionRows = useMemo(() => {
     const sortedAlerts = [...alerts].sort((a, b) => {
