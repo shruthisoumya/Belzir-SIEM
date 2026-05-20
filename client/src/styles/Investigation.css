@@ -92,8 +92,8 @@
 }
 
 .answer-text::first-letter {
-  background: #4f8df7;
-  color: #ffffff;
+  background: transparent;
+  color: inherit;
 }
 
 .answer-card h3 {

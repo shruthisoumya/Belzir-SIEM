@@ -7,7 +7,7 @@ const API_BASE = "http://10.0.3.83:5000";
 export default function Investigation() {
   const [incidents, setIncidents] = useState([]);
   const [alerts, setAlerts] = useState([]);
-  const [query, setQuery] = useState("What alerts fired in the last hour?");
+  const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(true);
   const [asking, setAsking] = useState(false);

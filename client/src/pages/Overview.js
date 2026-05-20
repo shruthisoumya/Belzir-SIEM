@@ -223,10 +223,32 @@ export default function Overview() {
   }, []);
 
   const stats = useMemo(() => {
-    const totalAgents = safeNumber(summary?.totalAgents);
-    const activeAgents = safeNumber(summary?.activeAgents);
-    const disconnectedAgents = safeNumber(summary?.disconnectedAgents);
-    const neverConnectedAgents = safeNumber(summary?.neverConnectedAgents);
+    const totalAgents = safeNumber(
+  summary?.totalAgents ||
+  summary?.agents?.total ||
+  summary?.agents?.count ||
+  summary?.agentSummary?.total ||
+  new Set(alerts.map((a) => a.agent).filter(Boolean)).size
+);
+
+const activeAgents = safeNumber(
+  summary?.activeAgents ||
+  summary?.agents?.active ||
+  summary?.agentSummary?.active ||
+  new Set(alerts.map((a) => a.agent).filter(Boolean)).size
+);
+
+const disconnectedAgents = safeNumber(
+  summary?.disconnectedAgents ||
+  summary?.agents?.disconnected ||
+  summary?.agentSummary?.disconnected
+);
+
+const neverConnectedAgents = safeNumber(
+  summary?.neverConnectedAgents ||
+  summary?.agents?.neverConnected ||
+  summary?.agentSummary?.neverConnected
+);
 
     const activePercent =
       totalAgents > 0 ? Math.round((activeAgents / totalAgents) * 100) : 0;

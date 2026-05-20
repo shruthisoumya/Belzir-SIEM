@@ -62,9 +62,10 @@ export default function DailyReview() {
           patternsRes.json(),
         ]);
 
-        setAlerts(Array.isArray(alertsData) ? alertsData : []);
+        setAlerts(getPayloadArray(alertsData));
+        setPatterns(getPayloadArray(patternsData));
         setIncidents(getPayloadArray(incidentsData));
-        setPatterns(Array.isArray(patternsData) ? patternsData : []);
+        
       } catch (err) {
         console.error("Daily Review fetch error:", err);
       } finally {
